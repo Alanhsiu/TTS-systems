@@ -2,14 +2,14 @@
 import re
 from text import cleaners
 from text.define import LANG_ID2SYMBOLS
-
+from text.symbols import symbols
 
 # Mappings from symbol to numeric ID and vice versa:
 _symbol_to_id, _id_to_symbol = {}, {}
 for id, symbols in LANG_ID2SYMBOLS.items():
     _symbol_to_id[id] = {s: i for i, s in enumerate(symbols)}
     _id_to_symbol[id] = {i: s for i, s in enumerate(symbols)}
-
+# print("AAAA_symbol_to_id", _symbol_to_id)
 # Regular expression matching text enclosed in curly braces:
 _curly_re = re.compile(r"(.*?)\{(.+?)\}(.*)")
 

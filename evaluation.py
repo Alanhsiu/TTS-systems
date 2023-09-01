@@ -74,3 +74,10 @@ def cer(raw_text, pred_text, remove_whitespace=False):
     cer = jiwer.cer(raw_text, pred_text)
 
     return cer
+
+if __name__ == "__main__":
+    pred = google("_temp/test2.wav", "en")
+    input = "Is this the real life Is this just fantasy Caught in a landslide no escape from reality Open your eyes look up to the skies and see"
+    print(pred)
+    print(cer(input, pred))
+    

@@ -14,7 +14,11 @@ from dlhlp_lib.vocoders import get_vocoder, BaseVocoder
 import Define
 from global_setup import setup_data
 from tts.systems import get_system
-from text import text_to_sequence
+from text import text_to_sequence, symbols
+
+import pyopenjtalk
+from prepare_tg_accent import pp_symbols
+from convert_label import openjtalk2julius
 
 
 def read_lexicon(lex_path):
@@ -41,12 +45,16 @@ def preprocess_english(text):
             phones += lexicon[w.lower()]
         else:
             phones += list(filter(lambda p: p != " ", g2p(w)))
+    
+    print("49 phones ", phones)
     phones = "{" + "}{".join(phones) + "}"
     phones = re.sub(r"\{[^\w\s]?\}", "{sp}", phones)
     phones = phones.replace("}{", " ")
+    print("53 phones ", phones)
 
     print("Raw Text Sequence: {}".format(text))
     print("Phoneme Sequence: {}".format(phones))
+    print("57 phones", phones)
     sequence = np.array(
         text_to_sequence(
             phones, ['english_cleaners'], lang_id="en"
@@ -83,6 +91,25 @@ def preprocess_mandarin(text):
 
     return np.array(sequence)
 
+def preprocess_japanese(text:str):
+    fullcontext_labels = pyopenjtalk.extract_fullcontext(text)
+    phonemes , accents = pp_symbols(fullcontext_labels)
+    phonemes = [openjtalk2julius(p) for p in phonemes if p != '']
+
+    print(phonemes)
+
+    phonemes = "{" + "}{".join(phonemes) + "}"
+    phonemes = re.sub(r"\{[^\w\s]?\}", "{sp}", phonemes)
+    phonemes = phonemes.replace("}{", " ")
+    print(phonemes)
+    
+    sequence = np.array(
+        text_to_sequence(
+            phonemes, [], lang_id="jp"
+        )
+    )
+
+    return np.array(sequence)
 
 def build_fastspeech2(ckpt_path: str, data_configs):
     system = get_system("fastspeech2")
@@ -121,17 +148,25 @@ def mel2wav(vocoder: BaseVocoder, mel_path, wav_path):
 
 if __name__ == "__main__":
     # ==================parameters==================
-    ckpt_path = ""
-    data_config = "data_config/LJSpeech-1.1"
-    input = "Deep learning is fun."
-    spk = "LJSpeech"  # "LJSpeech", "103", "SSB0005", "jsut", "kss"...
+    # ckpt_path = "output/exp_2_FastSpeech2/ckpt/epoch=19-step=50000.ckpt"
+    # data_config = "data_config/LJSpeech-1.1"
+    # input = "Deep learning is fun."
+    # spk = "LJSpeech"  # "LJSpeech", "103", "SSB0005", "jsut", "kss"...
+    
+    ckpt_path = "output/exp_3_FastSpeech2-JSUT/ckpt/epoch=19-step=50000.ckpt"
+    data_config = "data_config/JSUT"
+    # input = "おはようごぢいます"
+    spk = "jsut"  # "LJSpeech", "103", "SSB0005", "jsut", "kss"...
+    input = "痛みを感じろ、痛みを考えろ、痛みを受け取れ、痛みを知れ。痛みを知らぬ者に、本当の平和は分からん。俺はヤヒコの痛みを忘れない。ここより、世界に痛みを！神羅天征！"
+    # input = "するとツルは、おじいさんの 頭の上を三ベん回って"
+    # input = "Is this the real life? Is this just fantasy? Caught in a landslide, no escape from reality. Open your eyes, look up to the skies and see"
     control = {  # Control FastSpeech2
         "p_control": 1.0,
         "e_control": 1.0,
         "d_control": 1.0,
     }
-    output_mel_path = "_temp/test.npy"
-    output_wav_path = "_temp/test.wav"
+    output_mel_path = "_temp/test2.npy"
+    output_wav_path = "_temp/test2.wav"
     vocoder = "HifiGAN"
     # ==================parameters==================
     
@@ -152,8 +187,12 @@ if __name__ == "__main__":
     # parser input to model's input format
     if data_config["lang_id"] == "en":
         text = preprocess_english(input)
+        print("input: ", input)
+        print("text: ", text)
     elif data_config["lang_id"] == "zh":
         text = preprocess_mandarin(input)
+    elif data_config["lang_id"] == "jp":
+        text = preprocess_japanese(input)
     else:
         raise NotImplementedError
     with open(Define.DATAPARSERS[data_config["name"]].speakers_path, 'r') as f:

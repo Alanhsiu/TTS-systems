@@ -132,3 +132,7 @@ _*/
 preprocessed_data/
 output/
 MFA/
+
+# raw data
+raw_data/
+

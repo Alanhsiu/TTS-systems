@@ -17,10 +17,10 @@ def get_phoneme_set(path, encoding='utf-8'):
 LANG_ID2SYMBOLS = {
     "en": en_symbols,
     "zh": zh_symbols,
-    # "jp": common_symbols + get_phoneme_set("_phoneset/JSUT.txt"),
+    "jp": common_symbols + get_phoneme_set("_phoneset/JSUT.txt"),
     # "ko": common_symbols + get_phoneme_set("_phoneset/kss.txt"),
 }
-
+# print("jp", common_symbols + get_phoneme_set("_phoneset/JSUT.txt"))
 
 LANGS = [
     "en", "zh", "fr", "de", "ru", "es", "jp", "cz", "ko", "nl"

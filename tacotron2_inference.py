@@ -59,10 +59,10 @@ def mel2wav(vocoder: BaseVocoder, mel_path, wav_path):
 
 if __name__ == "__main__":
     # ==================parameters==================
-    ckpt_path = ""
-    data_config = "data_config/LibriTTS"
-    input = "Deep learning is fun."
-    spk = "103"  # "LJSpeech", "103"...
+    ckpt_path = "output/exp_1/ckpt/epoch=19-step=50000.ckpt"
+    data_config = "data_config/LJSpeech-1.1"
+    input = "Is this the real life? Is this just fantasy? Caught in a landslide, no escape from reality. Open your eyes, look up to the skies and see."
+    spk = "LJSpeech"  # "LJSpeech", "103"...
     
     output_img_path = "_temp/test.png"
     output_mel_path = "_temp/test.npy"
