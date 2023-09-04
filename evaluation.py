@@ -76,8 +76,14 @@ def cer(raw_text, pred_text, remove_whitespace=False):
     return cer
 
 if __name__ == "__main__":
-    pred = google("_temp/test2.wav", "en")
-    input = "Is this the real life Is this just fantasy Caught in a landslide no escape from reality Open your eyes look up to the skies and see"
+    pred = google("_temp/test_stone.wav", "zh")
+    # input = "Is this the real life Is this just fantasy Caught in a landslide no escape from reality Open your eyes look up to the skies and see"
+    # input = "Ground Control to Major Tom."
+    input = "石獅寺，有四十四隻石獅子，四十四隻石獅子，吃了四十四個澀柿子。"
+    # input = "Supercalifragilisticexpialidocious."
+    # input = "するとツルはおじいさんの頭の上を三ベん回って"
+    # input = "痛みを感じろ"
+    # input = "哇！ 超大雙人床"
     print(pred)
     print(cer(input, pred))
     

@@ -40,11 +40,17 @@ def preprocess_english(text):
     g2p = G2p()
     phones = []
     words = re.split(r"([,;.\-\?\!\s+])", text)
+    print("words: ", words)
     for w in words:
+        print("W: ", w)
         if w.lower() in lexicon:
             phones += lexicon[w.lower()]
         else:
             phones += list(filter(lambda p: p != " ", g2p(w)))
+            print("50 ", g2p(w))
+            print("51 ", filter(lambda p: p != " ", g2p(w)))
+            print("52 ", list(filter(lambda p: p != " ", g2p(w))))
+        print("phones: ", phones)
     
     print("49 phones ", phones)
     phones = "{" + "}{".join(phones) + "}"
@@ -148,16 +154,23 @@ def mel2wav(vocoder: BaseVocoder, mel_path, wav_path):
 
 if __name__ == "__main__":
     # ==================parameters==================
-    # ckpt_path = "output/exp_2_FastSpeech2/ckpt/epoch=19-step=50000.ckpt"
-    # data_config = "data_config/LJSpeech-1.1"
-    # input = "Deep learning is fun."
-    # spk = "LJSpeech"  # "LJSpeech", "103", "SSB0005", "jsut", "kss"...
+    ckpt_path = "output/exp_2_FastSpeech2/ckpt/epoch=19-step=50000.ckpt"
+    # ckpt_path = "output/exp_2_FastSpeech2_multispeaker/ckpt/epoch=19-step=50000.ckpt"
+    data_config = "data_config/LJSpeech-1.1"
+    # input = "Is this the real life Is this just fantasy Caught in a landslide no escape from reality Open your eyes look up to the skies and see"
+    # # input = "Whether the weather be fine or whether the weather be not"
+    input = "Supercalifragilisticexpialidocious."
+    # # input = "Ground Control to Major Tom."
+    # # # input = "Deep learning is fun."
+    spk = "LJSpeech"  # "LJSpeech", "103", "SSB0005", "jsut", "kss"...
     
-    ckpt_path = "output/exp_3_FastSpeech2-JSUT/ckpt/epoch=19-step=50000.ckpt"
-    data_config = "data_config/JSUT"
-    # input = "おはようごぢいます"
-    spk = "jsut"  # "LJSpeech", "103", "SSB0005", "jsut", "kss"...
-    input = "痛みを感じろ、痛みを考えろ、痛みを受け取れ、痛みを知れ。痛みを知らぬ者に、本当の平和は分からん。俺はヤヒコの痛みを忘れない。ここより、世界に痛みを！神羅天征！"
+    # ckpt_path = "output/exp_3_FastSpeech2-JSUT/ckpt/epoch=19-step=50000.ckpt"
+    # data_config = "data_config/JSUT"
+    # # # input = "おはようごぢいます"
+    # spk = "jsut"  # "LJSpeech", "103", "SSB0005", "jsut", "kss"...
+    # input = "するとツルはおじいさんの頭の上を三ベん回って"
+    # input = "痛みを感じろ、神羅天征！"
+    # input = "痛みを感じろ、痛みを考えろ、痛みを受け取れ、痛みを知れ。痛みを知らぬ者に、本当の平和は分からん。俺はヤヒコの痛みを忘れない。ここより、世界に痛みを！神羅天征！"
     # input = "するとツルは、おじいさんの 頭の上を三ベん回って"
     # input = "Is this the real life? Is this just fantasy? Caught in a landslide, no escape from reality. Open your eyes, look up to the skies and see"
     control = {  # Control FastSpeech2
@@ -165,8 +178,8 @@ if __name__ == "__main__":
         "e_control": 1.0,
         "d_control": 1.0,
     }
-    output_mel_path = "_temp/test2.npy"
-    output_wav_path = "_temp/test2.wav"
+    output_mel_path = "_temp/test4.npy"
+    output_wav_path = "_temp/test4.wav"
     vocoder = "HifiGAN"
     # ==================parameters==================
     

@@ -59,9 +59,13 @@ def mel2wav(vocoder: BaseVocoder, mel_path, wav_path):
 
 if __name__ == "__main__":
     # ==================parameters==================
-    ckpt_path = "output/exp_1/ckpt/epoch=19-step=50000.ckpt"
+    ckpt_path = "output/exp_1_Tacotron2/ckpt/epoch=19-step=50000.ckpt"
     data_config = "data_config/LJSpeech-1.1"
-    input = "Is this the real life? Is this just fantasy? Caught in a landslide, no escape from reality. Open your eyes, look up to the skies and see."
+    # input = "Is this the real life? Is this just fantasy? Caught in a landslide, no escape from reality. Open your eyes, look up to the skies and see."
+    # input = "Ground Control to Major Tom."
+    # input = "Whether the weather be fine or whether the weather be not."
+    input = "Supercalifragilisticexpialidocious."
+
     spk = "LJSpeech"  # "LJSpeech", "103"...
     
     output_img_path = "_temp/test.png"
@@ -87,7 +91,6 @@ if __name__ == "__main__":
 
     # parser input to model's input format
     text = np.array(text_to_sequence(input, data_config["text_cleaners"], data_config["lang_id"]))
-
     # If you want to use apply g2p and use phoneme as input, use functions from fastspeech2_inference.py
     # from fastspeech2_inference import preprocess_english, preprocess_mandarin
     # if data_config["lang_id"] == "en":
@@ -97,6 +100,7 @@ if __name__ == "__main__":
     # else:
     #     raise NotImplementedError
 
+    print("text: " , text)
     with open(Define.DATAPARSERS[data_config["name"]].speakers_path, 'r') as f:
         speakers = json.load(f)
     spk = np.array([speakers.index(spk)])
